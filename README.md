@@ -18,14 +18,11 @@ Angular JS 'HotKey' Directives Project.
 as attribute:
     <ANY
       ng-hotkey
-      ng-hk-def = '....'>
+      ng-hk-def = ''>
 
   
 ## License
 [MIT2.0](https://opensource.org/licenses/MIT)
 
 
-    <ANY
-      ng-hotkey
-      ng-hk-def = ''>
       
