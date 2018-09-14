@@ -29,7 +29,8 @@ Angular JS 'HotKey' Directives Project.
     >
 
 ## 함수의 범위
-<i>NgHotkey</i> directive에는 AngularJS의 $scope에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+<i>NgHotkey</i> directive에서는 키워드($global$)를 이용하여 AngularJS의 $scope에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+
 - scope 함수: '함수이름' 사용   
 
       <ANY    
@@ -43,6 +44,27 @@ Angular JS 'HotKey' Directives Project.
       <ANY    
         ng-hotkey
         ng-hk-def = "new NgHotkey('X', '$global$.delete')"
+        ...
+      >
+
+## 함수 파라미터의 범위
+<i>NgHotkey</i> directive에서는 키워드($global$)를 이용하여 AngularJS의 $scope에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다.
+
+- scope 변수: '변수이름' 사용   
+
+      <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', 'delete')"
+        ng-hk-args = "id"
+        ...
+      >
+
+- global 변수: $global$.'변수이름' 사용
+
+      <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', '$global$.delete')"
+        ng-hk-args = "$global$.id"
         ...
       >
 
