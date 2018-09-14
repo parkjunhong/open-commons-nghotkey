@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="ngHotkey">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<!-- <script type="text/javascript" src="../js/angular.js"></script> -->
+<!-- <script type="text/javascript" src="../js/ng-hotkey.js"></script> -->
+<script type="text/javascript" src="https://code.angularjs.org/1.7.4/angular.js"></script>
+<script type="text/javascript" src="https://github.com/parkjunhong/open-commons-nghotkey/blob/master/js/ng-hotkey.js"></script>
+
+<script type="text/javascript">
+
+var ctrl = "ngHotkeyCtrl";
+
+var fnGlobal = function() {
+	console.log(this, arguments);
+};
+
+var bingFnGlobal = fnGlobal.bind("global");
+
+// 'register' modules.
+var ngHotKey = angular.module("ngHotkey", []);
+
+ngHotKey.directive("ngHotkey", NgHotkey.directive);
+
+ngHotKey.controller("ngHotkeyCtrl", function($scope){
+	
+	console.log("Hello, Angular JS 'Hotkey' Directives");
+	
+	$scope.directive = "Angular JS 'Hotkey' Directive";
+	$scope.version = "0.1.0";
+	
+	
+	$scope.bindFnNg = fnGlobal.bind("ng");
+	
+	$scope.fnNg = fnGlobal;
+	
+});
+
+</script>
 </head>
-<body>
+<body ng-controller="ngHotkeyCtrl">
+
+<ul>
+<li><H1>{{directive}}</H1></li>
+<li><H1>{{version}}</H1></li>
+</ul>
+
+<input type="text" ng-model="keyPresses"
+  ng-hotkey
+  ng-hk-def-bindNg = 'new NgHotkey("A", "bindFnNg")'
+  ng-hk-args-bindNg = 'directive, version, $global$.ctrl, "hi, bindFnNg"'
+  ng-hk-prevent-bindNg
+  ng-hk-stop-bindNg
+  
+  ng-hk-def-ng = 'new NgHotkey("S", "fnNg")'
+  ng-hk-args-ng = 'directive, version, $global$.ctrl, "hi, fnNg"'    
+  
+  ng-hk-def-bindGlobal = 'new NgHotkey("G", "$global$.bingFnGlobal")'
+  ng-hk-args-bindGlobal = 'directive, version, $global$.ctrl, "hi, bingFnGlobal"'
+  
+  ng-hk-def-global = 'new NgHotkey("F", "$global$.fnGlobal")'
+  ng-hk-args-global = 'directive, version, $global$.ctrl, "hi, fnGlobal"'
+  ng-hk-prevent-global
+  ng-hk-stop-global
+> 
+
 
 </body>
 </html>

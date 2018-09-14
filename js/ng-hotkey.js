@@ -2,11 +2,11 @@
  * This file is generated under this project, "open.commons.js". 
  *
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @copyright: 
- * @package: 
  * @license: MIT License
- * @url: 
- * @require: 
+ * @url: https://github.com/parkjunhong/open-commons-nghotkey
+ * @version: 0.1.0
+ * 
+ * @require: Angular JS 1.7 or higher
  * @since: 2018. 9. 14. 오후 8:56:20
  */
 
@@ -85,6 +85,8 @@ var NgHotkey = function(hotkey, fn, mask) {
 	this.which = evalHotkey(hotkey);
 	this.key = hotkey;
 	this.fn = fn;
+	this.preventDefault = false;
+	this.stopPropagation = false;
 
 	if (isNaV(mask)) {
 		this.ctrl = undefined;
@@ -105,6 +107,24 @@ var NgHotkey = function(hotkey, fn, mask) {
 			this.shift = undefined;
 		}
 	}
+	
+	this.arguments = [];
+};
+
+
+/**
+ * Assign arguments.
+ * 
+ * @param args arguments of a function. 
+ * @returns
+ *
+ * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+ * @since 2018. 9. 15.
+ * 
+ * @see fn
+ */
+NgHotkey.prototype.setArguments = function(args){
+	this.arguments = args;
 };
 
 /**
@@ -147,7 +167,7 @@ NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
 };
 
 // Angularjs directive.
-NgHotkey.directives = function() {
+NgHotkey.directive = function() {
 	return function(scope, element, attrs) {
 		// To focus to unfocusable elemets.
 		if (attrs.tabindex == undefined || attrs.tabindex == null) {
@@ -156,23 +176,76 @@ NgHotkey.directives = function() {
 
 		element.bind("keydown", function(event) {
 			var hotkeys = [];
+			var hotkey = null;
 			// Extract only ng-hotkey-def-???
 			for ( var k in attrs) {
-				if (k.startsWith("ngHotkeyDef")) {
-					hotkeys.push(eval(attrs[k]));
+				if (k.startsWith("ngHkDef")) {
+					
+					hotkeys.push(hotkey = eval(attrs[k]));
+					// search 'preventDefault'
+					if( !isNaV(attrs["ngHkPrevent" + k.replace("ngHkDef", "")])) {
+						hotkey.preventDefault = true;
+					}
+					
+					// search 'stopPropagation'
+					if( !isNaV(attrs["ngHkStop" + k.replace("ngHkDef", "")])) {
+						hotkey.stopPropagation = true;
+					}
+					
+					// search arguments.
+					var argsStr = attrs["ngHkArgs" + k.replace("ngHkDef", "")];
+					
+					if( argsStr ) {
+						var argsArr = argsStr.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+						
+						var args = [];
+						
+						argsArr.forEach( arg => {
+							// eval from global scope
+							if( arg.startsWith("$global$.")) {
+								args.push(eval(arg.replace("$global$.", "")));
+							}else
+							// eval from angularjs scope
+							{
+								args.push(scope.$eval(arg));
+							}
+						});
+						
+						hotkey.setArguments(args);
+					}
 				}
 			}
 
 			// check in loop...
 			for (index in hotkeys) {
+				
 				hotkey = hotkeys[index];
+				
 				if (hotkey.eval(event.which, event.ctrlKey, event.shiftKey)) {
+					
 					scope.$apply(function() {
-						scope.$eval(hotkey.fn);
+						// eval 'function'
+						var fn = null;
+						if( hotkey.fn.startsWith("$global$.")) {
+							fn = eval(hotkey.fn.replace("$global$.", ""));
+						}else {
+							fn = scope.$eval(hotkey.fn);
+						}
+						// add 'angularjs scope', event
+						hotkey.arguments.push(scope, event);
+						
+						fn.apply(this, hotkey.arguments);
 					});
 
-					event.preventDefault();
-					event.stopPropagation();
+					// apply 'preventDefault'
+					if( hotkey.preventDefault) {
+						event.preventDefault();
+					}
+					
+					// apply 'stopPropagation'
+					if( hotkey.stopPropagation) {
+						event.stopPropagation();
+					}
 
 					break;
 				}
