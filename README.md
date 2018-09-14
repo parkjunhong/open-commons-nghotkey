@@ -30,12 +30,18 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 ```
 
 > __단축키 객체__
+ 
 ```
 new NgHotkey( 단축키, 함수, 마스킹)
 ```
 * 단축키: 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
-* 함수: 함수 이름을 사용 
-
+* 함수: 함수 이름을 사용
+* 마스킹: 아래 3개 중에 하나를 입력하거나 입력하지 않음.
+  - _ctrl_: **_Ctrl_** 키 설정
+  - _shift_: **_Shift_** 키 설정
+  - _all_: **_Ctrl_** + **_Shift_** 키 설정
+  - 입력하지 않음: 설정하지 않음.
+  
 ## 함수의 범위
 __NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJS의 _$scope_ 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
 
@@ -92,6 +98,31 @@ __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 
     ...
   >
   ```
+  
+## 기타 지원
+__NgHotkey__ directive는 단축키와 연결되어 실행되는 함수(scope 함수, global 함수에 상관없이)에 설정한 파라미터 외에 파라미터 마지막에 _Angular JS_ 의 $scope 객체와 발생한 _Event_ 객체를 전달한다.
+
+> javascript
+```
+// global variable
+var date = '2018-09-14';
+//  global function
+var callback = function(str, param, scope, event) {
+    console.log("str", str);
+    console.log("param", param);
+    console.log("scope", scope);
+    console.log("event", event);
+}
+```
+> html
+```
+<ANY
+    ng-hotkey
+    ng-hk-def = "new NgHotkey('S', '$global$.callback')"
+    ng-hk-args = "'001-A-T001', $global$.date"
+>
+```
+> 실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 $scope_ 객체와 _event_ 객체도 전달된다.
   
 ## License
 [MIT2.0](https://opensource.org/licenses/MIT)
