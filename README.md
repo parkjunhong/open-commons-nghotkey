@@ -64,7 +64,7 @@ __NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS�
   ```
 
 ## 함수 파라미터의 범위
-__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS의 $scope에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다.
+__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS의 $scope에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
 
 > scope 변수: '변수이름' 사용   
   ```
@@ -81,7 +81,7 @@ __NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS�
   <ANY    
     ng-hotkey
     ng-hk-def = "new NgHotkey('X', '$global$.delete')"
-    ng-hk-args = "$global$.id"
+    ng-hk-args = "$global$.id, location, 'today is friday'"
     ...
   >
   ```
