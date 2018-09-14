@@ -29,14 +29,14 @@ __예시__
 >
 ```
 
-__단축키 객체 만들기__
+__단축키 객체__
 
 ```
 new NgHotkey( 단축키, 함수, 마스킹)
 ```
 
 ## 함수의 범위
-_NgHotkey_ directive에서는 키워드(__$global$__)를 이용하여 AngularJS의 $scope에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+__NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJS의 _$scope_ 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
 
 * scope 함수: '함수이름' 사용   
   ```
