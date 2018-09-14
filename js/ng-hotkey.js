@@ -16,28 +16,51 @@ var NG_HOTKEY_KEYBOARD_CHAR = {"bs" : 8,"tab" : 9,"enter" : 13,"shift" : 16,"ctr
  * is Not a Value.
  * 
  * @param obj
+ *            object
  * @returns
- *
+ * 
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
  * @since 2018. 9. 14.
  */
-function isNaV (obj) {
+function isNaV(obj) {
 	return obj == undefined || obj == null;
 }
 
+/**
+ * 
+ * @param obj
+ *            object
+ * @param msg
+ *            a message for an error.
+ * @returns
+ * 
+ * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+ * @since 2018. 9. 14.
+ */
 function assert(obj, msg) {
-	if( isNaV(obj) ) {
+	if (isNaV(obj)) {
 		throw Error(msg + " MUST NOT be undefined or null. value: " + obj);
-	} 
+	}
 }
 
-function evalHotkey(hotkey){	
+/**
+ * find a keycode and return it.
+ * 
+ * @param hotkey key string.
+ * @returns
+ * 
+ * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+ * @since 2018. 9. 14.
+ * 
+ * @see NG_HOTKEY_KEYBOARD_CHAR
+ */
+function evalHotkey(hotkey) {
 	try {
-		var key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()]; 
+		var key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()];
 		assert(key);
-		
+
 		return key;
-	}catch(e){
+	} catch (e) {
 		throw Error("Unsupported hotkey. input: " + key);
 	}
 }
@@ -45,73 +68,78 @@ function evalHotkey(hotkey){
 /**
  * Hotkey Declaration model
  * 
- * @param hotkey
- * @param fn
- * @param mask [ ctrl | shift | all ] 
+ * @param hotkey keyboard.
+ * @param fn a function after key pressed
+ * @param mask
+ *            mask key info. [ ctrl | shift | all ]
  * @returns
- *
+ * 
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
  * @since 2018. 9. 14.
  */
 var NgHotkey = function(hotkey, fn, mask) {
-	
+
 	assert(hotkey, "A 'hotkey'");
 	assert(fn, "A 'function to be executed'");
-	
+
 	this.which = evalHotkey(hotkey);
 	this.key = hotkey;
 	this.fn = fn;
-	
-	if( isNaV(mask) ) {
+
+	if (isNaV(mask)) {
 		this.ctrl = undefined;
 		this.shift = undefined;
-	}else{
-		switch( mask ) {
-			case "ctrl":
-				this.ctrl = true;
-				break;
-			case "shift":
-				this.shift = true;
-				break;
-			case "all":
-				this.ctrl = true;
-				this.shift = true;
-			default:
-				this.ctrl = undefined;
-				this.shift = undefined;
+	} else {
+		switch (mask) {
+		case "ctrl":
+			this.ctrl = true;
+			break;
+		case "shift":
+			this.shift = true;
+			break;
+		case "all":
+			this.ctrl = true;
+			this.shift = true;
+		default:
+			this.ctrl = undefined;
+			this.shift = undefined;
 		}
 	}
 };
 
-/***
+/**
+ * Match NgHotkey Definition to KeyEvent .
  * 
  * @param which
+ *            KeyEvent.which
  * @param ctrlKey
+ *            KeyEvent.ctrlKey
  * @param shiftKey
+ *            KeyEvent.shiftKey
  * @returns
- *
+ * 
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
  * @since 2018. 9. 14.
  */
-NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey){
+NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
 	var eval = true;
-	
+
 	// #1. key 비고
 	eval &= this.which == which;
-	if( !eval ) {
+	if (!eval) {
 		return false;
 	}
-	
+
 	// #2. ctrl, shift 비교
-	function mask(self,other, eval) {
-		return self 	//
-			? eval &= self == other	//
-					: eval &= !other;
+	function mask(self, other, eval) {
+		return self //
+		? eval &= self == other //
+		: eval &= !other;
 	}
-	
+
 	// #2-1. ctrl
 	eval = mask(this.ctrl, ctrlKey, eval);
-	if( !eval ) {
+	if (!eval) {
 		return false;
 	}
 	// #2-2. shift
@@ -119,35 +147,33 @@ NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey){
 };
 
 // Angularjs directive.
-NgHotkey.directives = function(){
+NgHotkey.directives = function() {
 	return function(scope, element, attrs) {
 		// To focus to unfocusable elemets.
-		if( attrs.tabindex == undefined || attrs.tabindex == null ) {
+		if (attrs.tabindex == undefined || attrs.tabindex == null) {
 			element.attr("tabindex", 999999); // <--- A number is as good as it big....
 		}
-		
+
 		element.bind("keydown", function(event) {
 			var hotkeys = [];
-			// Extract only ng-hotkey-???
-			for(var k in attrs) {
-				if( k.startsWith("ngHotkeyDef")) {
+			// Extract only ng-hotkey-def-???
+			for ( var k in attrs) {
+				if (k.startsWith("ngHotkeyDef")) {
 					hotkeys.push(eval(attrs[k]));
 				}
 			}
-			
+
 			// check in loop...
-			for( index in hotkeys ) {
+			for (index in hotkeys) {
 				hotkey = hotkeys[index];
-				
-				if( hotkey.eval(event.which, event.ctrlKey, event.shiftKey) ) {
-					
+				if (hotkey.eval(event.which, event.ctrlKey, event.shiftKey)) {
 					scope.$apply(function() {
 						scope.$eval(hotkey.fn);
 					});
-					
+
 					event.preventDefault();
 					event.stopPropagation();
-					
+
 					break;
 				}
 			}
