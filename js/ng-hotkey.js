@@ -207,7 +207,11 @@ NgHotkey.directive = function() {
 							}else
 							// eval from angularjs scope
 							{
-								args.push(scope.$eval(arg));
+								try {
+									args.push(scope.$eval(arg));
+								}catch(e) {
+									console.error(e);
+								}
 							}
 						});
 						
@@ -217,7 +221,7 @@ NgHotkey.directive = function() {
 			}
 
 			// check in loop...
-			for (index in hotkeys) {
+			for (var index =0; index < hotkeys.length; index++) {
 				
 				hotkey = hotkeys[index];
 				
