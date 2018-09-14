@@ -2,9 +2,17 @@
 Angular JS 'HotKey' Directives Project.
 
 - since: 2018-09-14
+- version: 0.1.0
 - author: fafanmama@naver.com
 
-## Directive
+## Overview
+The <i>NgHotkey</i> directive allows you to bind a specific keyboard key to a function.
+
+## Directive Info
+
+"Range"
+
+
 [Mandatory]
 - ng-hotkey: 해당 엘리먼트에서 ng-hotkey 를 사용한다는 선언
 - ng-hk-def: 단축키와 함수를 등록
