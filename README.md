@@ -43,7 +43,7 @@ new NgHotkey( 단축키, 함수, 마스킹)
   - 입력하지 않음: 설정하지 않음.
   
 ## 함수의 범위
-__NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJS의 _$scope_ 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS의 _$scope_ 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
 
 > scope 함수: '함수이름' 사용   
   ```
@@ -64,7 +64,7 @@ __NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJ
   ```
 
 ## 함수 파라미터의 범위
-__NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJS의 $scope에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다.
+__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 AngularJS의 $scope에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다.
 
 > scope 변수: '변수이름' 사용   
   ```
