@@ -54,7 +54,7 @@ __NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJ
   >
   ```      
 
-> global 함수: __$global$.__'함수이름' 사용
+> global 함수: _$global$._'함수이름' 사용
   ```
   <ANY    
     ng-hotkey
@@ -76,7 +76,7 @@ __NgHotkey__ directive에서는 키워드(__$global$__)를 이용하여 AngularJ
   >
   ```
 
-> global 변수: __$global$.__'변수이름' 사용
+> global 변수: _$global$._'변수이름' 사용
   ```
   <ANY    
     ng-hotkey
