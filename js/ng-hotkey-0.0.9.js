@@ -1,12 +1,12 @@
 /*
- * This file is generated under this project, "open-commons-nghotkey". 
+ * This file is generated under this project, "open.commons.js". 
  *
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @copyright: Park_Jun_Hong_(fafanmama_at_naver_com)
+ * @copyright: 
+ * @package: 
  * @license: MIT License
- * @url: https://github.com/parkjunhong/open-commons-nghotkey
- * @version: 0.2.0
- * @require: Angular JS 1.7 or higher
+ * @url: 
+ * @require: 
  * @since: 2018. 9. 14. 오후 8:56:20
  */
 
@@ -46,8 +46,7 @@ function assert(obj, msg) {
 /**
  * find a keycode and return it.
  * 
- * @param hotkey
- *            key string.
+ * @param hotkey key string.
  * @returns
  * 
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
@@ -57,7 +56,7 @@ function assert(obj, msg) {
  */
 function evalHotkey(hotkey) {
 	try {
-		let key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()];
+		var key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()];
 		assert(key);
 
 		return key;
@@ -69,10 +68,8 @@ function evalHotkey(hotkey) {
 /**
  * Hotkey Declaration model
  * 
- * @param hotkey
- *            keyboard.
- * @param fn
- *            a function after key pressed
+ * @param hotkey keyboard.
+ * @param fn a function after key pressed
  * @param mask
  *            mask key info. [ ctrl | shift | all ]
  * @returns
@@ -81,15 +78,13 @@ function evalHotkey(hotkey) {
  * @since 2018. 9. 14.
  */
 var NgHotkey = function(hotkey, fn, mask) {
-	
+
 	assert(hotkey, "A 'hotkey'");
 	assert(fn, "A 'function to be executed'");
 
 	this.which = evalHotkey(hotkey);
 	this.key = hotkey;
 	this.fn = fn;
-	this.preventDefault = false;
-	this.stopPropagation = false;
 
 	if (isNaV(mask)) {
 		this.ctrl = undefined;
@@ -110,24 +105,6 @@ var NgHotkey = function(hotkey, fn, mask) {
 			this.shift = undefined;
 		}
 	}
-	
-	this.argsDecl = null;
-};
-
-/**
- * Assign argument declarations.
- * 
- * @param args
- *            argument declarations of a function.
- * @returns
- * 
- * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @since 2018. 9. 15.
- * 
- * @see fn
- */
-NgHotkey.prototype.setArgsDecl = function(argsDecl){
-	this.argsDecl = argsDecl;
 };
 
 /**
@@ -145,7 +122,7 @@ NgHotkey.prototype.setArgsDecl = function(argsDecl){
  * @since 2018. 9. 14.
  */
 NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
-	let eval = true;
+	var eval = true;
 
 	// #1. key 비고
 	eval &= this.which == which;
@@ -169,140 +146,36 @@ NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
 	return mask(this.shift, shiftKey, eval);
 };
 
-
-var evalArguments = function(argsDecl, scope){
-	
-	let parameters = [];
-	
-	let argsArr = new NgHotkeyArgParser(argsDecl).parse();
-	
-	for( let arg of argsArr ) {
-		
-		switch ( arg.charAt(0) ) {
-			case "[":
-				if( arg.length == 2 ){
-					parameters.push(eval("[]"));
-				}else{
-					parameters.push(evalArguments(arg.substr(1, arg.length - 2), scope));
-				}
-				break;
-			case "\"":
-			default:
-				// eval from global scope
-				if( arg.startsWith("global::") ) {
-					try{
-						parameters.push(eval(arg.replace("global::", "")));
-					}catch( e) {
-						parameters.push(undefined);
-					}
-				}else
-				// eval from angularjs scope
-				{
-					try {
-						parameters.push(scope.$eval(arg));
-					}catch (e) {
-						console.error(e);
-					}
-				}
-				break;
-		}
-	}
-	
-	return parameters;
-};
-
-
-
 // Angularjs directive.
-NgHotkey.directive = function() {
-	
+NgHotkey.directives = function() {
 	return function(scope, element, attrs) {
-		
 		// To focus to unfocusable elemets.
 		if (attrs.tabindex == undefined || attrs.tabindex == null) {
 			element.attr("tabindex", 999999); // <--- A number is as good as it big....
 		}
-		
+
 		element.bind("keydown", function(event) {
-			
-			let hotkeys = [];
-			let hotkey = null;
-			let hkDomain = null;
-			
-			// Extract only ng-hk-def-???
-			for ( let k in attrs) {
-				
-				if (!k.startsWith("ngHkDef")) {
-					continue;
+			var hotkeys = [];
+			// Extract only ng-hotkey-def-???
+			for ( var k in attrs) {
+				if (k.startsWith("ngHotkeyDef")) {
+					hotkeys.push(eval(attrs[k]));
 				}
-					
-				// #1. crete a Hotkey instance.
-				hotkeys.push(hotkey = eval(attrs[k]));
-				
-				// Hotkey domain
-				hkDomain = k.replace("ngHkDef", "");
-				
-				// #2. 'preventDefault'
-				if( !isNaV(attrs["ngHkPrevent" + hkDomain])) {
-					hotkey.preventDefault = true;
-				}
-				
-				// #3. 'stopPropagation'
-				if( !isNaV(attrs["ngHkStop" + hkDomain])) {
-					hotkey.stopPropagation = true;
-				}
-				
-				// #4. Function arguments.
-				var argsStr = attrs["ngHkArgs" + hkDomain];
-				if( !argsStr ) {
-					continue;
-				}
-				
-				hotkey.setArgsDecl(argsStr);
 			}
-			
+
 			// check in loop...
-			for (let index =0; index < hotkeys.length; index++) {
-				
+			for (index in hotkeys) {
 				hotkey = hotkeys[index];
-				
-				if (!hotkey.eval(event.which, event.ctrlKey, event.shiftKey)) {
-					continue;
-				}
-					
-				scope.$apply(function() {
-					
-					if( hotkey.fn == undefined || hotkey.fn == null){
-						return ;
-					}
-					// eval 'function'
-					var fn = null;
-					if( hotkey.fn.startsWith("global::")) {
-						fn = eval(hotkey.fn.replace("global::", ""));
-					}else {
-						fn = scope.$eval(hotkey.fn);
-					}
-					
-					// eval 'arguments'
-					let parameters = hotkey.argsDecl ? evalArguments(hotkey.argsDecl, scope) : [];
-					
-					// add 'angularjs scope', event
-					parameters.push(scope, event);
-					
-					fn.apply(this, parameters);
-				});
+				if (hotkey.eval(event.which, event.ctrlKey, event.shiftKey)) {
+					scope.$apply(function() {
+						scope.$eval(hotkey.fn);
+					});
 
-				// apply 'preventDefault'
-				if( hotkey.preventDefault) {
 					event.preventDefault();
-				}
-				
-				// apply 'stopPropagation'
-				if( hotkey.stopPropagation) {
 					event.stopPropagation();
-				}
 
-				break;
+					break;
+				}
 			}
 		});
 	};
