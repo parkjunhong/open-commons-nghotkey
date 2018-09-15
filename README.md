@@ -122,7 +122,7 @@ var callback = function(str, param, scope, event) {
     ng-hk-args = "'001-A-T001', $global$.date"
 >
 ```
-> 실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 _event_ 객체도 전달된다.
+실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 _event_ 객체도 전달된다.
   
 ## License
 [MIT2.0](https://opensource.org/licenses/MIT)
