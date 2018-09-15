@@ -2,7 +2,7 @@
 [__Angular JS__](https://angularjs.org/) '__Hotkey__' Directive.
 
 * since: 2018-09-14
-* version: 0.1.0
+* version: 0.2.0
 * author: fafanmama@naver.com
 
 ## 개요
@@ -43,7 +43,7 @@ new NgHotkey( 단축키, 함수, 마스킹)
   - 입력하지 않음: 설정하지 않음.
   
 ## 함수의 범위
-__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+__NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
 
 > scope 함수: '함수이름' 사용   
   ```
@@ -54,17 +54,17 @@ __NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 [__Angular
   >
   ```      
 
-> global 함수: _$global$._'함수이름' 사용
+> global 함수: _global::_'함수이름' 사용
   ```
   <ANY    
     ng-hotkey
-    ng-hk-def = "new NgHotkey('X', '$global$.delete')"
+    ng-hk-def = "new NgHotkey('X', 'global::delete')"
     ...
   >
   ```
 
 ## 함수 파라미터의 범위
-__NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
+__NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
 
 > scope 변수: '변수이름' 사용   
   ```
@@ -76,12 +76,12 @@ __NgHotkey__ directive에서는 키워드(_$global$_)를 이용하여 [__Angular
   >
   ```
 
-> global 변수: _$global$._'변수이름' 사용
+> global 변수: _global::_'변수이름' 사용
   ```
   <ANY    
     ng-hotkey
-    ng-hk-def = "new NgHotkey('X', '$global$.delete')"
-    ng-hk-args = "$global$.id, location, 'today is friday'"
+    ng-hk-def = "new NgHotkey('X', 'global::delete')"
+    ng-hk-args = "global::id, location, 'today is friday'"
     ...
   >
   ```
@@ -118,11 +118,20 @@ var callback = function(str, param, scope, event) {
 ```
 <ANY
     ng-hotkey
-    ng-hk-def = "new NgHotkey('S', '$global$.callback')"
-    ng-hk-args = "'001-A-T001', $global$.date"
+    ng-hk-def = "new NgHotkey('S', 'global::callback')"
+    ng-hk-args = "'001-A-T001', global::date"
 >
 ```
 실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 _event_ 객체도 전달된다.
+
+## Update
+
+> 2018-09-16
+* __Release: 0.2.0__
+* global 함수/변수 접근자 변경: _$global$_ -> _global::_
+* 함수 파라미터 처리 기능 확장
+  - nested 배열 형태의 설정 지원 (내부 Parser 추가)
+  - 함수 파라미터 lazy-evaluation 을 통한 성능향상(기대?)
   
 ## License
 [MIT2.0](https://opensource.org/licenses/MIT)
