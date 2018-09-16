@@ -65,9 +65,11 @@ function NgHotKey(hotkey, callback, masking){
 ```    
     
 > __단축키__
+
 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
 
 > __함수__
+
 단축키와 연결할 함수의 __이름__ 을 설정한다. 단순히 함수 이름을 설정함으로써 HMTL Element와 연결된 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)를 사용할 수 있고, 접근자(_global::_)를 이용하여 전역적으로 정의된 global 함수도 모두 사용할 수 있다.
 
 * scope 함수: '함수이름' 사용   
@@ -89,7 +91,9 @@ function NgHotKey(hotkey, callback, masking){
         ...
     >
     ```
+    
 > __마스킹__
+
 아래 3개 중에 하나를 입력하거나 입력하지 않음.
 * _ctrl_: **_Ctrl_** 키 설정
 * _shift_: **_Shift_** 키 설정
@@ -105,7 +109,8 @@ _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있
 * _string type_ : 큰따옴표(") 또는 작은따옴표(')로 묶인 값.
 * _variable_ : 변수. (데이타 변수, 함수도 가능)
 
-> scope 변수 정의
+> __scope 변수 정의__
+
 ```
 <ANY
     ...
@@ -116,7 +121,8 @@ _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있
 >
 ```
 
-> global 변수 정의
+> __global 변수 정의__
+
 ```
 <ANY    
     ...
@@ -127,7 +133,8 @@ _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있
 >
 ```
  
- > 여러 개 정의
+ > __여러 개 정의__
+ 
  ```
 <ANY
     ...
@@ -146,7 +153,8 @@ _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있
 > ["월", "화", "수"]    
 ```
 
-> 중첩된 배열
+> __중첩된 배열__
+
 ```
 <ANY    
     ...
@@ -167,9 +175,13 @@ _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있
 ## 다중 단축키 설정
 __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 설정하여 같거나 서로 다른 함수와 연결할 수 있다.
 
-> _ng-hk-def-{xxx}_: {xxx}에 다른 단축키 연결고 구분되는 값을 설정 
+> __ng-hk-def-_{xxx}___
+
+_{xxx}_에 다른 단축키 연결고 구분되는 값을 설정
+
   ```
   <ANY
+    ...
     ng-hotkey
     ng-hk-def-rename = "new NgHotkey('R', 'rename')"
     ng-hk-def-delete = "new NgHotkey('X', 'delete')"
@@ -180,7 +192,8 @@ __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 
 ## 기타 지원
 __NgHotkey__ directive는 단축키와 연결되어 실행되는 함수(scope 함수, global 함수에 상관없이)에 설정한 파라미터 외에 파라미터 마지막에 [_Angular JS_](https://angularjs.org) 의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 발생한 [_KeyboardEvent_](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) 객체를 전달한다.
 
-> javascript
+> __javascript__
+
 ```
 // global variable
 var date = '2018-09-14';
@@ -192,15 +205,17 @@ var callback = function(str, param, scope, event) {
     console.log("event", event);
 }
 ```
-> html
+> __html__
+
 ```
 <ANY
+    ...
     ng-hotkey
     ng-hk-def = "new NgHotkey('S', 'global::callback')"
     ng-hk-args = "'001-A-T001', global::date"
 >
 ```
-실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 _event_ 객체도 전달된다.
+실행된 함수의 로그결과에는 _ng-hk-args_ 설정된 2개의 값('001-A-T001'과 global 변수인 '2018-09-14') 외에도 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 객체와 [_KeyboardEvent_](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) 객체도 전달된다.
 
 ## Update
 
