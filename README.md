@@ -18,7 +18,7 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 * _ng-hk-prevent_: [Event.preventDefault](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) 설정 __(No Assignment Operator)__
 * _ng-hk-stop_: [Event.stopPropagatoin](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation) 설정 __(No Assignment Operator)__
 
-> __예시__
+> __html__
 ```
 <ANY
     ng-hotkey
@@ -29,7 +29,7 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 >
 ```
 
-## 단축키 선언 (ng-hotkey)
+## ng-hotkey (directive 선언)
 HTML Element에 단축키 정의를 선언한다. 이 선언을 통해서 _ng-hk-def_, _ng-hk-args_, _ng-hk-prevent_, _ng-hk-stop_ attribute를 처리한다.
 ```
 <ANY
@@ -39,10 +39,11 @@ HTML Element에 단축키 정의를 선언한다. 이 선언을 통해서 _ng-hk
 >
 ```
 
-## 단축키 정의 (ng-hk-def)
-HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[_ctrl_ | _shift_ | _all_ \])를 설정한다. 
+## ng-hk-def (단축키 정의)
+HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[_ctrl_ | _shift_ | _all_ \])를 설정한다.
+단축키 정의에 해당하는 문자열은 큰따옴표(")와 작은따옴표(') 모두를 지원한다.
 
-> javascript 
+> __javascript__
 ```
 /**
  * @param {string} hokey 단축키
@@ -53,66 +54,86 @@ function NgHotKey(hotkey, callback, masking){
     ...
 }
 ```
-> html
-```
-<ANY
-    ...
-    ng-hotkey
-    ng-hk-def = 'new NgHotkey("R", "send", "ctrl")'
-    ...
->
-```
-> 단축키: 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
+> __html__
+* 단축키 정의 문자열을 큰따옴표(")로 하는 경우
+    ```
+    <ANY
+        ...
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('enter', 'send')"
+        ...
+    >
+    ```
+* 단축키 정의 문자열을 작은따옴표(')로 하는 경우
+    ```
+    <ANY
+        ...
+        ng-hotkey
+        ng-hk-def = 'new NgHotkey("enter", "send")'
+        ...
+    >
+    ```    
+    
+> __단축키__
+키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
 
-> 함수
+> __함수__
 단축키와 연결할 함수의 __이름__ 을 설정한다. 단순히 함수 이름을 설정함으로써 HMTL Element와 연결된 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)를 사용할 수 있고, 접근자(_global::_)를 이용하여 전역적으로 정의된 global 함수도 모두 사용할 수 있다.
 
 * scope 함수: '함수이름' 사용   
-  ```
-  <ANY    
-    ng-hotkey
-    ng-hk-def = "new NgHotkey('X', 'delete')"
-    ...
-  >
-  ```      
-
+    ```
+    <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', 'send')"
+        ...
+    >
+    ```
+  
 * global 함수: _global::_'함수이름' 사용
-  ```
-  <ANY    
-    ng-hotkey
-    ng-hk-def = "new NgHotkey('X', 'global::delete')"
-    ...
-  >
-  ```
-  * 마스킹: 아래 3개 중에 하나를 입력하거나 입력하지 않음.
-  - _ctrl_: **_Ctrl_** 키 설정
-  - _shift_: **_Shift_** 키 설정
-  - _all_: **_Ctrl_** + **_Shift_** 키 설정
-  - 입력하지 않음: 설정하지 않음.
+    ```
+    <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', 'global::send')"
+        ...
+    >
+    ```
+> __마스킹__
+아래 3개 중에 하나를 입력하거나 입력하지 않음.
+* _ctrl_: **_Ctrl_** 키 설정
+* _shift_: **_Shift_** 키 설정
+* _all_: **_Ctrl_** + **_Shift_** 키 설정
+* 입력하지 않음: 설정하지 않음.
     
 
-## 함수 파라미터,
-__NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
+## ng-hk-args (함수 파라미터 정의)
+_number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있으며, 배열로 선언할 수 있다.
+일반적으로 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)를 사용할 수 있으며, __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 전역적으로 선언된 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
+* _number type_ : 숫자형 값
+* _boolean type_ : true | false
+* _string type_ : 큰따옴표(") 또는 작은따옴표(')로 묶인 값.
+* _variable_ : 변수. (데이타 변수, 함수도 가능)
 
 > scope 변수: '변수이름' 사용   
-  ```
-  <ANY    
-    ng-hotkey
-    ng-hk-def = "new NgHotkey('X', 'delete')"
-    ng-hk-args = "id"
-    ...
-  >
-  ```
+    ```
+    <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', 'delete')"
+        ng-hk-args = "id"
+        ...
+    >
+    ```
 
 > global 변수: _global::_'변수이름' 사용
-  ```
-  <ANY    
-    ng-hotkey
-    ng-hk-def = "new NgHotkey('X', 'global::delete')"
-    ng-hk-args = "global::id, location, 'today is friday'"
+    ```
+    <ANY    
+        ng-hotkey
+        ng-hk-def = "new NgHotkey('X', 'global::delete')"
+        ng-hk-args = "global::id, location, 'today is friday'"
     ...
-  >
-  ```
+    >
+    ```
+ 
+ > 배열 선언
 
 ## 다중 단축키 설정
 __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 설정하여 같거나 서로 다른 함수와 연결할 수 있다.
