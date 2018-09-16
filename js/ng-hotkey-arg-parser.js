@@ -4,7 +4,7 @@
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
  * @copyright: Park_Jun_Hong_(fafanmama_at_naver_com)
  * @license: MIT 2.0
- * @url: 
+ * @url: https://github.com/parkjunhong/open-commons-nghotkey/blob/master/js/ng-hotkey-arg-parser.js
  * @version: 0.1.0
  * @require: ES6 or higher
  * @since: 2018. 9. 15. 오후 10:10:05

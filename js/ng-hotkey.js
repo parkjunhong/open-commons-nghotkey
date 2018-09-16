@@ -7,6 +7,7 @@
  * @url: https://github.com/parkjunhong/open-commons-nghotkey
  * @version: 0.2.0
  * @require: Angular JS 1.7 or higher
+ * @dependency: ng-hotkey-arg-parser.js
  * @since: 2018. 9. 14. 오후 8:56:20
  */
 

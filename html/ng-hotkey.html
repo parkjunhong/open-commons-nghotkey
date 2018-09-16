@@ -33,7 +33,7 @@ ngHotKey.controller("ngHotkeyCtrl", function($scope){
 	console.log("Hello, Angular JS 'Hotkey' Directives");
 	
 	$scope.directive = "Angular JS 'Hotkey' Directive";
-	$scope.version = "0.1.0";
+	$scope.version = "0.2.0";
 	
 	$scope.bindFnNg = fnGlobal.bind("ng");
 	
@@ -69,6 +69,21 @@ function parseArrayString(string){
 <li><H1>{{directive}}</H1></li>
 <li><H1>{{version}}</H1></li>
 </ul>
+
+<ul>
+<li><H1>{{directive}} {{version}}</H1></li>
+</ul>
+
+<ul>
+<li ng-hotkey 
+  ng-hk-def-shift='new NgHotkey("f", "handleHotkey", "shift")'
+  ng-hk-def='new NgHotkey("f", "handleHotkey")'
+>File (Shift+F)</li>
+<li>File (F)</li>
+<li>Open (Shift+O)</li>
+<li>Open (O)</li>
+</ul>
+
 
 <ul>
 <li>Multi: (A.prevent/S/F/G.prevent) 
