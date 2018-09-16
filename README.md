@@ -55,24 +55,14 @@ function NgHotKey(hotkey, callback, masking){
 }
 ```
 > __html__
-* 단축키 정의 문자열을 큰따옴표(")로 하는 경우
-    ```
-    <ANY
-        ...
-        ng-hotkey
-        ng-hk-def = "new NgHotkey('enter', 'send')"
-        ...
-    >
-    ```
-* 단축키 정의 문자열을 작은따옴표(')로 하는 경우
-    ```
-    <ANY
-        ...
-        ng-hotkey
-        ng-hk-def = 'new NgHotkey("enter", "send")'
-        ...
-    >
-    ```    
+```
+<ANY
+    ...
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("enter", "send")'
+    ...
+>
+```    
     
 > __단축키__
 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
@@ -82,18 +72,20 @@ function NgHotKey(hotkey, callback, masking){
 
 * scope 함수: '함수이름' 사용   
     ```
-    <ANY    
+    <ANY
+        ...
         ng-hotkey
-        ng-hk-def = "new NgHotkey('X', 'send')"
+        ng-hk-def = 'new NgHotkey("X", "send")'
         ...
     >
     ```
   
 * global 함수: _global::_'함수이름' 사용
     ```
-    <ANY    
+    <ANY
+        ...
         ng-hotkey
-        ng-hk-def = "new NgHotkey('X', 'global::send')"
+        ng-hk-def = 'new NgHotkey("X", "global::send")'
         ...
     >
     ```
@@ -107,33 +99,70 @@ function NgHotKey(hotkey, callback, masking){
 
 ## ng-hk-args (함수 파라미터 정의)
 _number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있으며, 배열로 선언할 수 있다.
-일반적으로 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)를 사용할 수 있으며, __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 전역적으로 선언된 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
+일반적으로 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)를 사용할 수 있으며, __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 전역적으로 선언된 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분하며, 중첩된 형태의 배열도 지원한다.
 * _number type_ : 숫자형 값
 * _boolean type_ : true | false
 * _string type_ : 큰따옴표(") 또는 작은따옴표(')로 묶인 값.
 * _variable_ : 변수. (데이타 변수, 함수도 가능)
 
-> scope 변수: '변수이름' 사용   
-    ```
-    <ANY    
-        ng-hotkey
-        ng-hk-def = "new NgHotkey('X', 'delete')"
-        ng-hk-args = "id"
-        ...
-    >
-    ```
-
-> global 변수: _global::_'변수이름' 사용
-    ```
-    <ANY    
-        ng-hotkey
-        ng-hk-def = "new NgHotkey('X', 'global::delete')"
-        ng-hk-args = "global::id, location, 'today is friday'"
+> scope 변수 정의
+```
+<ANY
     ...
-    >
-    ```
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("X", "send")'
+    ng-hk-args = "id"
+    ...
+>
+```
+
+> global 변수 정의
+```
+<ANY    
+    ...
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("X", "send")'
+    ng-hk-args = 'global::id'
+    ...
+>
+```
  
- > 배열 선언
+ > 여러 개 정의
+ ```
+<ANY
+    ...
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("X", "send")'
+    ng-hk-args = 'id, global::id, "2018-09-16", true, 999, \["월", "화", "수"\]'
+    ...
+>
+   
+함수 파라미터
+> id
+> global:id
+> "2018-09-16"
+> true
+> 999
+> ["월", "화", "수"]    
+```
+
+> 중첩된 배열
+```
+<ANY    
+    ...
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("X", "send")'
+    ng-hk-args = '\["월", "화", "수", \["목", "금", "토"\], "일"\]'
+    ...
+>
+
+함수 파라미터
+> "월"
+> "화"
+> "수"
+> ["목", "금", "토"]
+> "일"
+```
 
 ## 다중 단축키 설정
 __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 설정하여 같거나 서로 다른 함수와 연결할 수 있다.
