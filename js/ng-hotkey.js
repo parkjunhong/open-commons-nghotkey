@@ -308,3 +308,10 @@ NgHotkey.directive = function() {
 		});
 	};
 };
+
+// Register a directive.
+var ngHotkey = angular.module("ngHotkey", []);
+
+(function(){
+	ngHotkey.directive("ngHotkey", NgHotkey.directive);
+})();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="ngHotkey">
+<html ng-app="ngHotkeyApp">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -24,11 +24,9 @@ var fnGlobal = function(d, v, c, m, scope, event) {
 var bingFnGlobal = fnGlobal.bind("global");
 
 // 'register' modules.
-var ngHotKey = angular.module("ngHotkey", []);
+var ngHotkeyApp = angular.module("ngHotkeyApp", ["ngHotkey"]);
 
-ngHotKey.directive("ngHotkey", NgHotkey.directive);
-
-ngHotKey.controller("ngHotkeyCtrl", function($scope){
+ngHotkeyApp.controller("ngHotkeyCtrl", function($scope){
 	
 	console.log("Hello, Angular JS 'Hotkey' Directives");
 	
