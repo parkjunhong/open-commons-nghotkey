@@ -10,13 +10,13 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 
 ## HTML Attributes
 > __필수__
-* _ng-hotkey_: 해당 엘리먼트에서 __NgHotkey__ 를 사용한다는 선언. (No 인자 없음)
+* _ng-hotkey_: 해당 엘리먼트에서 __NgHotkey__ 를 사용한다는 선언. __(No Assignment Operator)__
 * _ng-hk-def_: 단축키와 함수를 등록.
 
 > __선택적__
 * _ng-hk-args_: 함수에서 받을 파라미터 설정.
-* _ng-hk-prevent_: [Event.preventDefault](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) 설정 (인자 없음)
-* _ng-hk-stop_: [Event.stopPropagatoin](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation) 설정 ()
+* _ng-hk-prevent_: [Event.preventDefault](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) 설정 __(No Assignment Operator)__
+* _ng-hk-stop_: [Event.stopPropagatoin](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation) 설정 __(No Assignment Operator)__
 
 > __예시__
 ```
@@ -40,7 +40,7 @@ HTML Element에 단축키 정의를 선언한다. 이 선언을 통해서 _ng-hk
 ```
 
 ## 단축키 정의 (ng-hk-def)
-HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[ctrl | shift | all \])를 설정한다. 
+HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[_ctrl_ | _shift_ | _all_ \])를 설정한다. 
 
 > javascript 
 ```
@@ -62,18 +62,12 @@ function NgHotKey(hotkey, callback, masking){
     ...
 >
 ```
-* 단축키: 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
-* 함수: 함수 이름을 사용
-* 마스킹: 아래 3개 중에 하나를 입력하거나 입력하지 않음.
-  - _ctrl_: **_Ctrl_** 키 설정
-  - _shift_: **_Shift_** 키 설정
-  - _all_: **_Ctrl_** + **_Shift_** 키 설정
-  - 입력하지 않음: 설정하지 않음.
-  
-## 함수의 범위
-__NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)와 global 함수 모두 사용할 수 있다.
+> 단축키: 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
 
-> scope 함수: '함수이름' 사용   
+> 함수
+단축키와 연결할 함수의 __이름__ 을 설정한다. 단순히 함수 이름을 설정함으로써 HMTL Element와 연결된 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope) 에 등록된 함수(이하 scope 함수)를 사용할 수 있고, 접근자(_global::_)를 이용하여 전역적으로 정의된 global 함수도 모두 사용할 수 있다.
+
+* scope 함수: '함수이름' 사용   
   ```
   <ANY    
     ng-hotkey
@@ -82,7 +76,7 @@ __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular
   >
   ```      
 
-> global 함수: _global::_'함수이름' 사용
+* global 함수: _global::_'함수이름' 사용
   ```
   <ANY    
     ng-hotkey
@@ -90,8 +84,14 @@ __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular
     ...
   >
   ```
+  * 마스킹: 아래 3개 중에 하나를 입력하거나 입력하지 않음.
+  - _ctrl_: **_Ctrl_** 키 설정
+  - _shift_: **_Shift_** 키 설정
+  - _all_: **_Ctrl_** + **_Shift_** 키 설정
+  - 입력하지 않음: 설정하지 않음.
+    
 
-## 함수 파라미터의 범위
+## 함수 파라미터,
 __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)와 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분해서 설정한다.
 
 > scope 변수: '변수이름' 사용   
