@@ -102,12 +102,13 @@ function NgHotKey(hotkey, callback, masking){
     
 
 ## ng-hk-args (함수 파라미터 정의)
-_number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있으며, 배열로 선언할 수 있다.
+_number type_, _boolean type_, _string tye_ 및 _variable_ 을 사용할 수 있으며, 배열(_array type_)로 선언할 수 있다.
 일반적으로 [__Angular JS__](https://angularjs.org/)의 [_$scope_](https://docs.angularjs.org/api/ng/type/$rootScope.Scope)에 등록된 변수(이하 scope 변수)를 사용할 수 있으며, __NgHotkey__ directive에서는 키워드(_global::_)를 이용하여 전역적으로 선언된 global 변수 모두 사용할 수 있다. 또한 __2개 이상__ 의 파라미터는 콤마(,)로 구분하며, 중첩된 형태의 배열도 지원한다.
 * _number type_ : 숫자형 값
 * _boolean type_ : true | false
 * _string type_ : 큰따옴표(") 또는 작은따옴표(')로 묶인 값.
 * _variable_ : 변수. (데이타 변수, 함수도 가능)
+* _array type_ : 배열
 
 > __scope 변수 정의__
 
