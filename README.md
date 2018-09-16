@@ -177,7 +177,7 @@ __NgHotkey__ directive는 하나의 HTML Element에 2개 이상의 단축키를 
 
 > __ng-hk-def-_{xxx}___
 
-_{xxx}_에 다른 단축키 연결고 구분되는 값을 설정
+_{xxx}_ 에 다른 단축키 연결고 구분되는 값을 설정
 
   ```
   <ANY
