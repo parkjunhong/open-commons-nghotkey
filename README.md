@@ -10,13 +10,13 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 
 ## HTML Attributes
 > __필수__
-* _ng-hotkey_: 해당 엘리먼트에서 __NgHotkey__ 를 사용한다는 선언. (선언적 사용)
-* _ng-hk-def_: 단축키와 함수를 등록 (설정인자 필요)
+* _ng-hotkey_: 해당 엘리먼트에서 __NgHotkey__ 를 사용한다는 선언. (No 인자 없음)
+* _ng-hk-def_: 단축키와 함수를 등록.
 
 > __선택적__
-* _ng-hk-args_: 함수에서 받을 파라미터 설정 (설정인자 필요)
-* _ng-hk-prevent_: [Event.preventDefault](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) 설정 (선언적 사용)
-* _ng-hk-stop_: [Event.stopPropagatoin](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation) 설정 (선언적 사용)
+* _ng-hk-args_: 함수에서 받을 파라미터 설정.
+* _ng-hk-prevent_: [Event.preventDefault](https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault) 설정 (인자 없음)
+* _ng-hk-stop_: [Event.stopPropagatoin](https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation) 설정 ()
 
 > __예시__
 ```
@@ -29,10 +29,38 @@ __NgHotkey__ directive를 이용해서 특정 키보드 키와 함수를 연결�
 >
 ```
 
-> __단축키 객체__
- 
+## 단축키 선언 (ng-hotkey)
+HTML Element에 단축키 정의를 선언한다. 이 선언을 통해서 _ng-hk-def_, _ng-hk-args_, _ng-hk-prevent_, _ng-hk-stop_ attribute를 처리한다.
 ```
-new NgHotkey( 단축키, 함수, 마스킹)
+<ANY
+    ...
+    ng-hotkey
+    ...
+>
+```
+
+## 단축키 정의 (ng-hk-def)
+HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[ctrl | shift | all \])를 설정한다. 
+
+> javascript 
+```
+/**
+ * @param {string} hokey 단축키
+ * @param {functio} callback 연결된 함수. nullable
+ * @param {string} masking 설정. [ctrl|shift|alll]
+ */
+function NgHotKey(hotkey, callback, masking){
+    ...
+}
+```
+> html
+```
+<ANY
+    ...
+    ng-hotkey
+    ng-hk-def = 'new NgHotkey("R", "send", "ctrl")'
+    ...
+>
 ```
 * 단축키: 키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
 * 함수: 함수 이름을 사용
