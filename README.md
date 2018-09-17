@@ -5,4 +5,7 @@
 * version: 0.2.0
 * author: fafanmama@naver.com
 
-## [Wiki](https://github.com/parkjunhong/open-commons-nghotkey/wiki)
+# Wiki
+* [Home](https://github.com/parkjunhong/open-commons-nghotkey/wiki)
+* [How To Use](https://github.com/parkjunhong/open-commons-nghotkey/wiki/How-To-Use)
+* [Readme.md](https://github.com/parkjunhong/open-commons-nghotkey/blob/master/README.md)
