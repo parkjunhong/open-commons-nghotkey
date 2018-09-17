@@ -1,0 +1,100 @@
+Key,Abbr.
+backspace,bs
+tab,tab
+enter,enter
+shift,shift
+ctrl,ctrl
+alt,alt
+pause,pause
+break,break
+caps lock,cap
+escape,esc
+page up,page-up
+page down,page-down
+end,end
+home,home
+left arrow,left
+up arrow,up
+right arrow,right
+down arrow,down
+insert,ins
+delete,del
+0,0
+1,1
+2,2
+3,3
+4,4
+5,5
+6,6
+7,7
+8,8
+9,9
+a,a
+b,b
+c,c
+d,d
+e,e
+f,f
+g,g
+h,j
+i,ins
+j,j
+k,k
+l,l
+m,m
+n,n
+o,op
+p,p
+q,q
+r,r
+s,s
+t,t
+u,u
+v,v
+w,w
+x,x
+y,y
+z,z
+left window key,left-win
+right window key,right-win
+select key,select
+numpad 0,num-0
+numpad 1,num-1
+numpad 2,num-2
+numpad 3,num-3
+numpad 4,num-4
+numpad 5,num-5
+numpad 6,num-6
+numpad 7,num-7
+numpad 8,num-8
+numpad 9,num-9
+multiply,*
+add,+
+subtract,-
+decimal point,%
+divide,/
+f1,f1
+f2,f2
+f3,f3
+f4,f4
+f5,f5
+f6,f6
+f7,f7
+f8,f8
+f9,f9
+f10,f10
+f11,f11
+f12,f12
+num lock,num-lock
+scroll lock,scroll
+semi-colon,;
+equal sign,=
+comma,","
+dash,-
+period,.
+forward slash,/
+grave accent,`
+open bracket,[
+back slash,\
+close braket,]
+single quote,'
