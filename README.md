@@ -43,7 +43,7 @@ HTML Element에 단축키 정의를 선언한다. 이 선언을 통해서 _ng-hk
 HTML Element에 사용할 단축키(Hotkey), 연결된 함수([Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function))와 마스킹 키(\[_ctrl_ | _shift_ | _all_ \])를 설정한다.
 단축키 정의에 해당하는 문자열은 큰따옴표(")와 작은따옴표(') 모두를 지원한다.
 
-> __javascript__
+> __javascript class__
 ```
 /**
  * @param {string} hokey 단축키
