@@ -66,7 +66,7 @@ function NgHotKey(hotkey, callback, masking){
     
 > __단축키__
 
-키보드 문자를 사용 (긴 내용은 줄임), [참조문서](https://docs.google.com/spreadsheets/d/1JXrmE_ywFWj-bWNpVoIoyIIf7F0h7wo6lkIwdrrX5lM/edit?usp=sharing)의 __Abbr.__ 사용
+키보드 문자를 사용 (긴 내용은 줄임), [키보드 코드표](https://github.com/parkjunhong/open-commons-nghotkey/blob/master/js/keyboard_char_to_code.csv)의 __Abbr.__ 사용
 
 > __함수__
 
