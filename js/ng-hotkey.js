@@ -5,7 +5,7 @@
  * @copyright: Park_Jun_Hong_(fafanmama_at_naver_com)
  * @license: MIT License
  * @url: https://github.com/parkjunhong/open-commons-nghotkey
- * @version: 0.2.0
+ * @version: 0.2.1
  * @require: Angular JS 1.7 or higher
  * @dependency: ng-hotkey-arg-parser.js
  * @since: 2018. 9. 14. 오후 8:56:20
@@ -170,6 +170,30 @@ NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
 	return mask(this.shift, shiftKey, eval);
 };
 
+/**
+ * 
+ * @param arg
+ * @param scope Angularjs $scope
+ * @returns
+ *
+ * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+ * @version 0.2.1
+ * @since 2018. 9. 17.
+ */
+var evalArg = function(arg, scope) {
+	try {
+		// eval from global scope
+		if( arg.startsWith("global::")) {
+			return eval(arg.replace("global::", ""));
+		} else
+		// eval from angularjs scope
+		{
+			return scope.$eval(arg);
+		}
+	}catch(e) {
+		return undefined;
+	}
+}
 
 var evalArguments = function(argsDecl, scope){
 	
@@ -189,23 +213,8 @@ var evalArguments = function(argsDecl, scope){
 				break;
 			case "\"":
 			default:
-				// eval from global scope
-				if( arg.startsWith("global::") ) {
-					try{
-						parameters.push(eval(arg.replace("global::", "")));
-					}catch( e) {
-						parameters.push(undefined);
-					}
-				}else
-				// eval from angularjs scope
-				{
-					try {
-						parameters.push(scope.$eval(arg));
-					}catch (e) {
-						console.error(e);
-					}
-				}
-				break;
+				parameters.push(evalArg(arg, scope));
+			break;
 		}
 	}
 	
@@ -291,6 +300,24 @@ NgHotkey.directive = function() {
 					parameters.push(scope, event);
 					
 					fn.apply(this, parameters);
+					
+					// since 0.2.1
+					// 'close' function
+					let closeFnDef = attrs["ngHkClose"];
+					if( !closeFnDef) {
+						return;
+					}
+					
+					let closeFn = evalArg(closeFnDef, scope);
+					if( !closeFn ) {
+						throw new Error("Invalid function. closeFn=" + closeFn);
+					}
+					
+					let closeArgDef = attrs["ngHkCloseArgs"];
+					let closeArg = closeArgDef ? evalArguments(closeArgDef, scope) : [];
+					closeArg.push(scope, event);
+					
+					closeFn.apply(this, closeArg);
 				});
 
 				// apply 'preventDefault'

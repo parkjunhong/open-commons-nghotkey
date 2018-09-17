@@ -5,7 +5,7 @@
  * @copyright: Park_Jun_Hong_(fafanmama_at_naver_com)
  * @license: MIT 2.0
  * @url: https://github.com/parkjunhong/open-commons-nghotkey/blob/master/js/ng-hotkey-arg-parser.js
- * @version: 0.1.0
+ * @version: 0.1.1
  * @require: ES6 or higher
  * @since: 2018. 9. 15. 오후 10:10:05
  */
@@ -127,6 +127,11 @@ NgHotkeyArgParserState.prototype.validate = function(){
 };
 
 
+
+function throwError (msg, state, token, before){
+	throw Error(msg + ". state='" + state + "'. token=" + token.value.c + ", index=" + token.value.i + (before ? ", before=" + before.value.c : "") + ", string=" + token.value.s);
+}
+
 /**
  * splite by comma(,), but escape comma(,) in quote(",').
  * splite by quote(", ')
@@ -147,8 +152,19 @@ var NgHotkeyArgParser = function(str){
 		let c = null;
 		let idx = null;
 		
-		let whitespaceOwners = [",", "[", "]"];
-		let escapeOwners = ["b", "f", "n", "r", "t"];
+		let AllowTokenFactory = function(beforeTokenValues) {
+			return {
+				values: beforeTokenValues,
+				allow : function(token){
+					return !token || this.values.contains(token.value.c); 
+				}
+			}
+		}
+		
+		let allowWs = AllowTokenFactory([",", "[", "]"]);
+		let allowEsc = AllowTokenFactory(["b", "f", "n", "r", "t"]);
+		let allowQuote = AllowTokenFactory([",", "["]);
+		
 		
 		while( !(token = itr.next()).done ){
 			
@@ -164,28 +180,16 @@ var NgHotkeyArgParser = function(str){
 			}
 			
 			switch ( c ) {
-				case ",":
-					if( !state.has() ) {
-						console.error("state", state);
-						throw Error("Illegal character sequence. state='ready character'. token=" + c + ", index=" + idx + ", string=" + token.value.s);
-					}
-					
-					if( state.status("dq")	//
-							|| state.status("sq") //
-							|| (state.status("brk") && state.status("brkReady")) ) {
-						state.push(c);
-					}else if( state.status("brk") && !state.status("brkReady")) {
-						console.error("state", state);
-						throw Error("Illegal character sequence. state='open bracket'. token=" + c + ", index=" + idx + ", string=" + token.value.s);
-					} else {
-						data.push(state.flush());	// clear 'token's buf'
-					}
-					
-					break;
 				case "\"":
 					if ( state.status("dq") ){
 						state.status("dq", false); // close 'double quote'
 					} else if( !state.status("sq") ){
+						
+						if( !allowQuote.allow(beforeToken) ) {
+							console.error("state", state);
+							throwError("Illegal character sequence", "not flush", token, beforeToken);
+						}
+						
 						state.status("dq", true); // open 'double quote'
 					}
 					
@@ -199,6 +203,13 @@ var NgHotkeyArgParser = function(str){
 					if ( state.status("sq") ){
 						state.status("sq", false);	// close 'single quote'
 					} else if( !state.status("dq") ){
+						
+						if( !allowQuote.allow(beforeToken) ) {
+							console.error("state", state);
+							
+							throwError("Illegal character sequence", "not flush", token, beforeToken);
+						}
+						
 						state.status("sq", true);	// open 'single quote'
 					}
 					
@@ -208,13 +219,39 @@ var NgHotkeyArgParser = function(str){
 					
 					state.push(c);
 					break;
+				case ",":
+					if( !state.has() ) {
+						console.error("state", state);
+						throwError("Illegal character sequence", "ready character", token, beforeToken);
+					}
+					
+					if( state.status("dq")	//
+							|| state.status("sq") //
+							|| (state.status("brk") && state.status("brkReady")) ) {
+						state.push(c);
+					}else if( state.status("brk") && !state.status("brkReady")) {
+						console.error("state", state);
+						
+						throwError("Illegal character sequence", "ready character", token, beforeToken);
+					} else {
+						data.push(state.flush());	// clear 'token's buf'
+					}
+					
+					break;
 				// begin array
 				case "[":
 					if( state.status("brk") ){
 						state.push(c);
 						c = this.$parse(itr, true); // open 'nested bracket'
 					}else if ( !state.status("sq") && !state.status("dq") ){
-						state.status("brk", true); // open 'bracet'
+						
+						if( beforeToken && beforeToken.value.c != ",") {
+							console.error("state", state);
+							
+							throwError("Illegal character sequence", "not flush", token, beforeToken);
+						}
+						
+						state.status("brk", true); // open 'bracket'
 					}
 				
 					state.push(c);			
@@ -233,7 +270,8 @@ var NgHotkeyArgParser = function(str){
 							return data;
 						}else{
 							console.error("state", state);
-							throw Error("Invalid Array Declaration Error. token=" + c + ", index=" + idx + ", string=" + token.value.s);
+							
+							throwError("Invalid Array Declaration Error", "not open bracket", token, beforeToken);
 						}
 					}
 				
@@ -255,29 +293,29 @@ var NgHotkeyArgParser = function(str){
 					if( /\s/.test(c) ) {
 						if( !beforeToken ) {
 							continue;
-						}else if( whitespaceOwners.contains(beforeToken.value.c) ) {
+						}else if( allowWs.allow(beforeToken) ) {
+							continue;
+						}else if( /\s/.test(beforeToken.value.c) ) {
 							continue;
 						}else if( !/\s/.test(beforeToken.value.c) ) {
 							beforeToken = token;
-							continue;
-						}else if( /\s/.test(beforeToken.value.c) ) {
 							continue;
 						}
 					}else {
 						if( beforeToken) {
 							if( /\s/.test(beforeToken.value.c) ) {
 								console.error("state", state);
-								throw Error("Invalid character sequence. state='wait not-whitespace'. token=" + c + ", index=" + idx + ", string=" + token.value.s);
+								throwError("Invalid character sequence", "wait not-whitespace", token, beforeToken);
 							}
 							
-							if( state.status("esc") && !escapeOwners.contains(c)){
+							if( state.status("esc") && !allowEsc.allow(beforeToken)){
 								console.error("state", state);
-								throw Error("Invalid character sequence. state='open escase'. token=" + c + ", index=" + idx + ", string=" + token.value.s);
+								throwError("Invalid character sequence", "open escase", token, beforeToken);
 							}
 							
 							if ( state.status("cbrk") ) {
 								console.error("state", state);
-								throw Error("Invalid character sequence. state='close bracket'. token=" + c + ", index=" + idx + ", string=" + token.value.s);						
+								throwError("Invalid character sequence", "close bracket", token, beforeToken);						
 							}
 							
 							if( state.status("brk") ) {
@@ -295,6 +333,7 @@ var NgHotkeyArgParser = function(str){
 		
 		if( !state.validate()) {
 			console.error("state", state);
+			
 			throw Error("Invalid parse state after parsing. state='close parsing'. state=" + JSON.stringify(state));
 		}
 		
