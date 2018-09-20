@@ -10,6 +10,8 @@
  * @since: 2018. 9. 15. 오후 10:10:05
  */
 
+'use strict'
+
 /**
  * String Iterator provide a character and its index.
  * 
