@@ -44,6 +44,10 @@ function* strItrGenerator(str){
 }
 
 
+/**
+ * 
+ * @param {any} value 
+ */
 Array.prototype.contains = function(value){
 	for(let v of this ) {
 		if( v == value ) {
