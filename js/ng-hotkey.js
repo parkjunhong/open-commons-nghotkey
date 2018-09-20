@@ -5,7 +5,7 @@
  * @copyright: Park_Jun_Hong_(fafanmama_at_naver_com)
  * @license: MIT License
  * @url: https://github.com/parkjunhong/open-commons-nghotkey
- * @version: 0.2.1
+ * @version: 0.2.2
  * @require: Angular JS 1.7 or higher
  * @dependency: ng-hotkey-arg-parser.js
  * @since: 2018. 9. 14. 오후 8:56:20
@@ -44,187 +44,213 @@ function assert(obj, msg) {
 	}
 }
 
-/**
- * find a keycode and return it.
- * 
- * @param hotkey
- *            key string.
- * @returns
- * 
- * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @since 2018. 9. 14.
- * 
- * @see NG_HOTKEY_KEYBOARD_CHAR
- */
-function evalHotkey(hotkey) {
-	try {
-		let key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()];
-		assert(key);
-
-		return key;
-	} catch (e) {
-		throw Error("Unsupported hotkey. input: " + key);
-	}
-}
 
 /**
- * Hotkey Declaration model
- * 
- * @param hotkey
- *            keyboard.
- * @param fn
- *            a function after key pressed
- * @param mask
- *            mask key info. [ ctrl | shift | all ]
- * @returns
- * 
- * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @since 2018. 9. 14.
+ * Angular JS Directive for 'Hotkey'.
  */
-var NgHotkey = function(hotkey, fn, mask) {
+var NgHotkey = class NgHotkey{
 	
-	assert(hotkey, "A 'hotkey'");
-	assert(fn, "A 'function to be executed'");
-
-	this.which = evalHotkey(hotkey);
-	this.key = hotkey;
-	this.fn = fn;
-	this.preventDefault = false;
-	this.stopPropagation = false;
-
-	if (isNaV(mask)) {
-		this.ctrl = undefined;
-		this.shift = undefined;
-	} else {
-		switch (mask) {
-		case "ctrl":
-			this.ctrl = true;
-			break;
-		case "shift":
-			this.shift = true;
-			break;
-		case "all":
-			this.ctrl = true;
-			this.shift = true;
-		default:
+	/**
+	 * Hotkey Declaration model
+	 * 
+	 * @param hotkey
+	 *            keyboard.
+	 * @param fn
+	 *            a function after key pressed
+	 * @param mask
+	 *            mask key info. [ ctrl | shift | all ]
+	 * 
+	 * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+	 * @since 2018. 9. 14.
+	 */
+	constructor(hotkey, fn, mask) {
+		assert(hotkey, "A 'hotkey'");
+		assert(fn, "A 'function to be executed'");
+		
+		this.which = this.evalHotkey(hotkey);
+		this.key = hotkey;
+		this.fn = fn;
+		this.preventDefault = false;
+		this.stopPropagation = false;
+		
+		if (isNaV(mask)) {
 			this.ctrl = undefined;
 			this.shift = undefined;
+		} else {
+			switch (mask) {
+			case "ctrl":
+				this.ctrl = true;
+				break;
+			case "shift":
+				this.shift = true;
+				break;
+			case "all":
+				this.ctrl = true;
+				this.shift = true;
+			default:
+				this.ctrl = undefined;
+			this.shift = undefined;
+			}
+		}
+		
+		this.argsDecl = null;
+	}
+	
+	/**
+	 * Assign argument declarations.
+	 * 
+	 * @param args
+	 *            argument declarations of a function.
+	 * @returns
+	 * 
+	 * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+	 * @since 2018. 9. 15.
+	 * 
+	 * @see fn
+	 */
+	setArgsDecl (argsDecl) {
+		this.argsDecl = argsDecl;
+	}
+	
+	/**
+	 * Match NgHotkey Definition to KeyEvent .
+	 * 
+	 * @param which
+	 *            KeyEvent.which
+	 * @param ctrlKey
+	 *            KeyEvent.ctrlKey
+	 * @param shiftKey
+	 *            KeyEvent.shiftKey
+	 * @returns
+	 * 
+	 * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+	 * @since 2018. 9. 14.
+	 */
+	eval (which, ctrlKey, shiftKey) {
+		let ev = true;
+
+		// #1. key 비고
+		ev &= this.which == which;
+		if (!ev) {
+			return false;
+		}
+
+		// #2. ctrl, shift 비교
+		function mask(self, other, ev) {
+			return self //
+			? ev &= self == other //
+			: ev &= !other;
+		}
+
+		// #2-1. ctrl
+		ev = mask(this.ctrl, ctrlKey, ev);
+		if (!ev) {
+			return false;
+		}
+		// #2-2. shift
+		return mask(this.shift, shiftKey, ev);
+	}
+	
+	/**
+	 * find a keycode and return it.
+	 * 
+	 * @param hotkey
+	 *            key string.
+	 * @returns
+	 * 
+	 * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+	 * @since 2018. 9. 14.
+	 * 
+	 * @see NG_HOTKEY_KEYBOARD_CHAR
+	 */
+	evalHotkey(hotkey) {
+		try {
+			let key = NG_HOTKEY_KEYBOARD_CHAR[hotkey.toLowerCase()];
+			assert(key);
+
+			return key;
+		} catch (e) {
+			throw Error("Unsupported hotkey. input: " + key);
 		}
 	}
 	
-	this.argsDecl = null;
-};
+}
+
+
+var NgHotkeyArgument = class NgHotkeyArgument {
+	/**
+	 * 
+	 * @param {string}
+	 *            arg
+	 * @param {object}
+	 *            scope Angularjs $scope
+	 * 
+	 * @return 파라미터 데이터.
+	 * 
+	 * @author Park_Jun_Hong_(fafanmama_at_naver_com)
+	 * @version 0.2.1
+	 * @since 2018. 9. 17.
+	 */
+	static evalArg (arg, scope) {
+		try {
+			// eval from global scope
+			if( arg.startsWith("global::")) {
+				return eval(arg.replace("global::", ""));
+			} else
+			// eval from angularjs scope
+			{
+				return scope.$eval(arg);
+			}
+		}catch(e) {
+			return undefined;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param {string}
+	 *            argsDecl 파라미터 선언
+	 * @param {opbject}
+	 *            scope Angular JS $scope instance
+	 * 
+	 * @return 파라미터 데이터
+	 */
+	static evalArguments (argsDecl, scope){
+		
+		let parameters = [];
+		
+		let argsArr = new NgHotkeyArgParser(argsDecl).parse();
+		
+		for( let arg of argsArr ) {
+			
+			switch ( arg.charAt(0) ) {
+				case "[":
+					if( arg.length == 2 ){
+						parameters.push(eval("[]"));
+					}else{
+						parameters.push(NgHotkeyArgument.evalArguments(arg.substr(1, arg.length - 2), scope));
+					}
+					break;
+				case "\"":
+				default:
+					parameters.push(NgHotkeyArgument.evalArg(arg, scope));
+				break;
+			}
+		}
+		
+		return parameters;
+	};
+}
+
 
 /**
- * Assign argument declarations.
- * 
- * @param args
- *            argument declarations of a function.
- * @returns
- * 
- * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @since 2018. 9. 15.
- * 
- * @see fn
- */
-NgHotkey.prototype.setArgsDecl = function(argsDecl){
-	this.argsDecl = argsDecl;
-};
-
-/**
- * Match NgHotkey Definition to KeyEvent .
- * 
- * @param which
- *            KeyEvent.which
- * @param ctrlKey
- *            KeyEvent.ctrlKey
- * @param shiftKey
- *            KeyEvent.shiftKey
- * @returns
- * 
- * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @since 2018. 9. 14.
- */
-NgHotkey.prototype.eval = function(which, ctrlKey, shiftKey) {
-	let eval = true;
-
-	// #1. key 비고
-	eval &= this.which == which;
-	if (!eval) {
-		return false;
-	}
-
-	// #2. ctrl, shift 비교
-	function mask(self, other, eval) {
-		return self //
-		? eval &= self == other //
-		: eval &= !other;
-	}
-
-	// #2-1. ctrl
-	eval = mask(this.ctrl, ctrlKey, eval);
-	if (!eval) {
-		return false;
-	}
-	// #2-2. shift
-	return mask(this.shift, shiftKey, eval);
-};
-
-/**
- * 
- * @param arg
- * @param scope Angularjs $scope
+ * Angular JS 
  * @returns
  *
  * @author Park_Jun_Hong_(fafanmama_at_naver_com)
- * @version 0.2.1
- * @since 2018. 9. 17.
+ * @since 2018. 9. 20.
  */
-var evalArg = function(arg, scope) {
-	try {
-		// eval from global scope
-		if( arg.startsWith("global::")) {
-			return eval(arg.replace("global::", ""));
-		} else
-		// eval from angularjs scope
-		{
-			return scope.$eval(arg);
-		}
-	}catch(e) {
-		return undefined;
-	}
-}
-
-var evalArguments = function(argsDecl, scope){
-	
-	let parameters = [];
-	
-	let argsArr = new NgHotkeyArgParser(argsDecl).parse();
-	
-	for( let arg of argsArr ) {
-		
-		switch ( arg.charAt(0) ) {
-			case "[":
-				if( arg.length == 2 ){
-					parameters.push(eval("[]"));
-				}else{
-					parameters.push(evalArguments(arg.substr(1, arg.length - 2), scope));
-				}
-				break;
-			case "\"":
-			default:
-				parameters.push(evalArg(arg, scope));
-			break;
-		}
-	}
-	
-	return parameters;
-};
-
-
-
-// Angularjs directive.
-NgHotkey.directive = function() {
+function ngHotkeyDirective() {
 	
 	return function(scope, element, attrs) {
 		
@@ -294,7 +320,7 @@ NgHotkey.directive = function() {
 					}
 					
 					// eval 'arguments'
-					let parameters = hotkey.argsDecl ? evalArguments(hotkey.argsDecl, scope) : [];
+					let parameters = hotkey.argsDecl ? NgHotkeyArgument.evalArguments(hotkey.argsDecl, scope) : [];
 					
 					// add 'angularjs scope', event
 					parameters.push(scope, event);
@@ -308,13 +334,13 @@ NgHotkey.directive = function() {
 						return;
 					}
 					
-					let closeFn = evalArg(closeFnDef, scope);
+					let closeFn = NgHotkeyArgument.evalArg(closeFnDef, scope);
 					if( !closeFn ) {
 						throw new Error("Invalid function. closeFn=" + closeFn);
 					}
 					
 					let closeArgDef = attrs["ngHkCloseArgs"];
-					let closeArg = closeArgDef ? evalArguments(closeArgDef, scope) : [];
+					let closeArg = closeArgDef ? NgHotkeyArgument.evalArguments(closeArgDef, scope) : [];
 					closeArg.push(scope, event);
 					
 					closeFn.apply(this, closeArg);
@@ -337,8 +363,7 @@ NgHotkey.directive = function() {
 };
 
 // Register a directive.
-var ngHotkey = angular.module("ngHotkey", []);
-
 (function(){
-	ngHotkey.directive("ngHotkey", NgHotkey.directive);
+	angular.module("ngHotkey", [])	//
+		.directive("ngHotkey", ngHotkeyDirective);
 })();
