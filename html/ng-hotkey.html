@@ -1,142 +1,139 @@
 <!DOCTYPE html>
 <html ng-app="ngHotkeyApp">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
 
-<!-- <script type="text/javascript" src="https://code.angularjs.org/1.7.4/angular.js"></script> -->
-<script type="text/javascript" src="../js/angular.js"></script>
-<script type="text/javascript" src="../js/ng-hotkey-arg-parser.js"></script>
-<script type="text/javascript" src="../js/ng-hotkey.js"></script>
+  <!-- <script type="text/javascript" src="https://code.angularjs.org/1.7.4/angular.js"></script> -->
+  <script type="text/javascript" src="../js/angular.js"></script>
+  <script type="text/javascript" src="../js/ng-hotkey-arg-parser.js"></script>
+  <script type="text/javascript" src="../js/ng-hotkey.js"></script>
 
-<script type="text/javascript">
+  <script type="text/javascript">
 
-var ctrl = "ngHotkeyCtrl";
+    var ctrl = "ngHotkeyCtrl";
 
-var callback = function() {
-	console.log(this, arguments);
-}.bind("callback")
+    var callback = function () {
+      console.log(this, arguments);
+    }.bind("callback")
 
-var fnGlobal = function(d, v, c, m, scope, event) {
-	console.log(this, arguments);
-};
+    var fnGlobal = function (d, v, c, m, scope, event) {
+      console.log(this, arguments);
+    };
 
-var bingFnGlobal = fnGlobal.bind("global");
+    var bingFnGlobal = fnGlobal.bind("global");
 
-// 'register' modules.
-var ngHotkeyApp = angular.module("ngHotkeyApp", ["ngHotkey"]);
+    // 'register' modules.
+    var ngHotkeyApp = angular.module("ngHotkeyApp", ["ngHotkey"]);
 
-ngHotkeyApp.controller("ngHotkeyCtrl", function($scope){
-	
-	console.log("Hello, Angular JS 'Hotkey' Directives");
-	
-	$scope.directive = "Angular JS 'Hotkey' Directive";
-	$scope.version = "0.2.0";
-	
-	$scope.bindFnNg = fnGlobal.bind("ng");
-	
-	$scope.fnNg = fnGlobal;
-	
-	$scope.cbtest1 = '"1,4", [1,2,3], global::fnGlobal, fnNg';
-	$scope.cbtest2 = "'1,4', [1,2,3], fnNg";
-	
-	$scope.itrString = '"1,4", [1,2,3], global::fnGlobal, fnNg';
-	
-});
+    ngHotkeyApp.controller("ngHotkeyCtrl", function ($scope) {
 
+      console.log("Hello, Angular JS 'Hotkey' Directives");
 
-// 
-function parseArrayString(string){
-	
-	console.debug("input", string);
-	
-	let itr = strItrGenerator(string);
-	let data = parse(itr, false);
-	console.debug("parsed", data);
-	
-	return data;
-}
+      $scope.directive = "Angular JS 'Hotkey' Directive";
+      $scope.version = "0.2.0";
+
+      $scope.bindFnNg = fnGlobal.bind("ng");
+
+      $scope.fnNg = fnGlobal;
+
+      $scope.cbtest1 = '"1,4", [1,2,3], global::fnGlobal, fnNg';
+      $scope.cbtest2 = "'1,4', [1,2,3], fnNg";
+
+      $scope.itrString = '"1,4", [1,2,3], global::fnGlobal, fnNg';
+
+    });
 
 
+    // 
+    function parseArrayString(string) {
 
-</script>
+      console.debug("input", string);
+
+      let itr = strItrGenerator(string);
+      let data = parse(itr, false);
+      console.debug("parsed", data);
+
+      return data;
+    }
+
+
+
+  </script>
 </head>
+
 <body ng-controller="ngHotkeyCtrl">
 
-<ul>
-<li><H1>{{directive}}</H1></li>
-<li><H1>{{version}}</H1></li>
-</ul>
+  <ul>
+    <li>
+      <H1>{{directive}}</H1>
+    </li>
+    <li>
+      <H1>{{version}}</H1>
+    </li>
+  </ul>
 
-<ul>
-<li><H1>{{directive}} {{version}}</H1></li>
-</ul>
+  <ul>
+    <li>
+      <H1>{{directive}} {{version}}</H1>
+    </li>
+  </ul>
 
-<ul>
-<li ng-hotkey 
-  ng-hk-def-shift='new NgHotkey("f", "handleHotkey", "shift")'
-  ng-hk-def='new NgHotkey("f", "handleHotkey")'
->File (Shift+F)</li>
-<li>File (F)</li>
-<li>Open (Shift+O)</li>
-<li>Open (O)</li>
-</ul>
+  <ul>
+    <li ng-hotkey ng-hk-def-shift='new NgHotkey("f", "handleHotkey", "shift")'
+      ng-hk-def='new NgHotkey("f", "handleHotkey")'>File (Shift+F)</li>
+    <li>File (F)</li>
+    <li>Open (Shift+O)</li>
+    <li>Open (O)</li>
+  </ul>
 
 
-<ul>
-<li>Multi: (A.prevent/S/F/G.prevent) 
-<li>
-<input type="text" ng-model="keyPresses"
-  ng-hotkey
-  ng-hk-def-bindNg = 'new NgHotkey("A", "bindFnNg")'
-  ng-hk-args-bindNg = 'directive, version, global::ctrl, "hi, bindFnNg"'
-  ng-hk-prevent-bindNg
-  ng-hk-stop-bindNg
-  
-  ng-hk-def-ng = "new NgHotkey('S', 'fnNg')"
-  ng-hk-args-ng = 'directive, version, global::ctrl, "hi, fnNg"'    
-  
-  ng-hk-def-bindGlobal = 'new NgHotkey("F", "global::bingFnGlobal")'
-  ng-hk-args-bindGlobal = 'directive, version, global::ctrl, "hi, bingFnGlobal"'
-  
-  ng-hk-def-global = 'new NgHotkey("G", "global::fnGlobal")'
-  ng-hk-args-global = 'directive, version, global::ctrl, "hi, fnGlobal"'
-  ng-hk-prevent-global
-  ng-hk-stop-global
->
-</ul>
-<br>
-<ul>
-<li>Callback: (X) - {{cbtest1}}
-<li>
-<input type="typex" ng-model="m1"
-  ng-hotkey
-  ng-hk-def='new NgHotkey("X", "global::callback")'
-  ng-hk-args = '{{cbtest1}}'
->
-</ul>
-<br>
-<ul>
-<li>Callback: (X) - {{cbtest2}}
-<li>
-<input type="typex" ng-model="m2"
-  ng-hotkey
-  ng-hk-def='new NgHotkey("X", "global::callback")'
-  ng-hk-args = "{{cbtest2}}"
->
-</ul>
-<hr>
-<br>
-<ul>
-<li>String.iterator
-<li>
-<input type="typex" ng-model="itrString" style="width: 800px;"
-  ng-hotkey
-  ng-hk-def='new NgHotkey("enter", "global::callback")'
-  ng-hk-args = "{{itrString}}"
->
-</ul>
+  <ul>
+    <li>Multi: (A.prevent/S/F/G.prevent)
+    <li>
+      <input type="text" ng-model="keyPresses" 
+        ng-hotkey 
+        ng-hk-def-bindNg='new NgHotkey("A", "bindFnNg")'
+        ng-hk-args-bindNg='directive, version, global::ctrl, "hi, bindFnNg"' 
+        ng-hk-prevent-bindNg ng-hk-stop-bindNg
+        ng-hk-def-ng="new NgHotkey('S', 'fnNg')" 
+        ng-hk-args-ng='directive, version, global::ctrl, "hi, fnNg"'
+        ng-hk-def-bindGlobal='new NgHotkey("F", "global::bingFnGlobal")'
+        ng-hk-args-bindGlobal='directive, version, global::ctrl, "hi, bingFnGlobal"'
+        ng-hk-def-global='new NgHotkey("G", "global::fnGlobal")'
+        ng-hk-args-global='directive, version, global::ctrl, "hi, fnGlobal"' 
+        ng-hk-prevent-global 
+        ng-hk-stop-global>
+  </ul>
+  <br>
+  <ul>
+    <li>Callback: (X) - {{cbtest1}}
+    <li>
+      <input type="typex" ng-model="m1" 
+        ng-hotkey 
+        ng-hk-def='new NgHotkey("X", "global::callback")'
+        ng-hk-args='{{cbtest1}}'>
+  </ul>
+  <br>
+  <ul>
+    <li>Callback: (X) - {{cbtest2}}
+    <li>
+      <input type="typex" ng-model="m2" ng-hotkey ng-hk-def='new NgHotkey("X", "global::callback")'
+        ng-hk-args="{{cbtest2}}">
+  </ul>
+  <hr>
+  <br>
+  <ul>
+    <li>String.iterator
+    <li>
+      <input type="typex" ng-model="itrString" style="width: 800px;" 
+        ng-hotkey
+        ng-hk-def='new NgHotkey("enter", "global::callback")' 
+        ng-hk-args="{{itrString}}">
+  </ul>
 
 
 </body>
+
 </html>
