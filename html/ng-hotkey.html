@@ -42,6 +42,14 @@
       $scope.cbtest2 = "'1,4', [1,2,3], fnNg";
 
       $scope.itrString = '"1,4", [1,2,3], global::fnGlobal, fnNg';
+      
+      $scope.handleHotkey = function(){
+    		console.debug("hi");  
+      };
+
+      $scope.handleHotkey1 = function(){
+    		console.debug(arguments);  
+      };
 
     });
 
@@ -63,7 +71,13 @@
   </script>
 </head>
 
-<body ng-controller="ngHotkeyCtrl">
+<body ng-controller="ngHotkeyCtrl" 
+  ng-hotkey 
+  ng-hk-def='new NgHotkey("f", "handleHotkey")' 
+  ng-hk-def-shift='new NgHotkey("f", "handleHotkey", "shift")'
+  ng-hk-def-g='new NgHotkey("f", "handleHotkey", "alt")'
+  ng-hk-prevent-g
+>
 
   <ul>
     <li>
@@ -82,7 +96,8 @@
 
   <ul>
     <li ng-hotkey ng-hk-def-shift='new NgHotkey("f", "handleHotkey", "shift")'
-      ng-hk-def='new NgHotkey("f", "handleHotkey")'>File (Shift+F)</li>
+      ng-hk-def='new NgHotkey("f", "handleHotkey")' 
+    >File (Shift+F)</li>
     <li>File (F)</li>
     <li>Open (Shift+O)</li>
     <li>Open (O)</li>
@@ -90,7 +105,7 @@
 
 
   <ul>
-    <li>Multi: (A.prevent/S/F/G.prevent)
+    <li>Multi: (a.prevent/S/F/s.prevent)
     <li>
       <input type="text" ng-model="keyPresses" 
         ng-hotkey 
